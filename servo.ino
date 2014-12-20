@@ -10,9 +10,9 @@ void setup() {
   Serial.println("Encoder test");
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
-  attachInterrupt(0, doEncoder, RISING);
+  attachInterrupt(0, doEncoder, CHANGE);
   
-  motor.setSpeed(255);
+  //motor.setSpeed(255);
 }
 
 volatile int state = 0;
@@ -23,6 +23,13 @@ volatile int dir = 0;
 volatile int pos = 0;
 
 void loop() {
+  if(abs(pos) > 20) {
+    motor.setSpeed(255);
+  }
+  else {
+    motor.setSpeed(255);
+  }
+  
   if(pos > 10) {
     motor.run(FORWARD);
   }
@@ -36,10 +43,16 @@ void loop() {
 
 // loop seems to run about 3ms most of the time
 void doEncoder() {
-  noInterrupts();
+  //noInterrupts();
   
-  dir = digitalRead(3) ? 1 : -1;
-  
+  int A = digitalRead(2);
+  int B = digitalRead(3);
+  if(A == B) {
+    dir = 1;
+  }
+  else {
+    dir = -1;
+  }
   
   clicks++;
   pos += dir;
@@ -55,5 +68,5 @@ void doEncoder() {
     Serial.println("------");
   }
   */
-  interrupts();
+  //interrupts();
 }
